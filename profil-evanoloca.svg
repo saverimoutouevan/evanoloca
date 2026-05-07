@@ -1,0 +1,173 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <clipPath id="circ"><circle cx="200" cy="200" r="198"/></clipPath>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#051c3f"/>
+      <stop offset="45%"  stop-color="#083f72"/>
+      <stop offset="80%"  stop-color="#0c6fa0"/>
+      <stop offset="100%" stop-color="#1a9dcc"/>
+    </linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#0e82b0"/>
+      <stop offset="100%" stop-color="#084563"/>
+    </linearGradient>
+    <linearGradient id="sand" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#f0d48a"/>
+      <stop offset="100%" stop-color="#d4a84b"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="50%" cy="50%">
+      <stop offset="0%"   stop-color="#fff9c4"/>
+      <stop offset="40%"  stop-color="#fdd835"/>
+      <stop offset="100%" stop-color="#f9a825"/>
+    </radialGradient>
+    <radialGradient id="sun-glow" cx="50%" cy="50%">
+      <stop offset="0%"   stop-color="#fdd835" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#fdd835" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="car-body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#1a3a6b"/>
+      <stop offset="100%" stop-color="#0d2347"/>
+    </linearGradient>
+    <linearGradient id="car-roof" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#1e4080"/>
+      <stop offset="100%" stop-color="#142f60"/>
+    </linearGradient>
+    <linearGradient id="gold-ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"   stop-color="#f9d71c"/>
+      <stop offset="50%"  stop-color="#c9a84c"/>
+      <stop offset="100%" stop-color="#f9d71c"/>
+    </linearGradient>
+    <filter id="glow-sun">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow-car">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="rgba(0,0,0,0.5)"/>
+    </filter>
+  </defs>
+
+  <g clip-path="url(#circ)">
+
+    <!-- Sky background -->
+    <rect width="400" height="400" fill="url(#sky)"/>
+
+    <!-- Subtle clouds -->
+    <ellipse cx="80"  cy="90"  rx="55" ry="16" fill="rgba(255,255,255,0.07)"/>
+    <ellipse cx="100" cy="83"  rx="38" ry="12" fill="rgba(255,255,255,0.05)"/>
+    <ellipse cx="310" cy="110" rx="48" ry="14" fill="rgba(255,255,255,0.06)"/>
+    <ellipse cx="330" cy="103" rx="32" ry="10" fill="rgba(255,255,255,0.05)"/>
+
+    <!-- Stars -->
+    <circle cx="45"  cy="45"  r="1.8" fill="white" opacity="0.6"/>
+    <circle cx="155" cy="30"  r="1.2" fill="white" opacity="0.4"/>
+    <circle cx="260" cy="48"  r="1.5" fill="white" opacity="0.5"/>
+    <circle cx="340" cy="35"  r="1.0" fill="white" opacity="0.4"/>
+    <circle cx="175" cy="65"  r="1.0" fill="white" opacity="0.35"/>
+
+    <!-- Sun glow -->
+    <circle cx="295" cy="115" r="90" fill="url(#sun-glow)"/>
+    <!-- Sun -->
+    <circle cx="295" cy="115" r="42" fill="url(#sun)" filter="url(#glow-sun)"/>
+    <!-- Sun rays -->
+    <g stroke="#fdd835" stroke-width="2.5" stroke-linecap="round" opacity="0.5">
+      <line x1="295" y1="58"  x2="295" y2="50"/>
+      <line x1="295" y1="172" x2="295" y2="180"/>
+      <line x1="238" y1="115" x2="230" y2="115"/>
+      <line x1="352" y1="115" x2="360" y2="115"/>
+      <line x1="255" y1="75"  x2="249" y2="69"/>
+      <line x1="335" y1="155" x2="341" y2="161"/>
+      <line x1="335" y1="75"  x2="341" y2="69"/>
+      <line x1="255" y1="155" x2="249" y2="161"/>
+    </g>
+
+    <!-- Horizon sea -->
+    <rect x="-10" y="258" width="420" height="160" fill="url(#sea)"/>
+    <!-- Sea shimmer -->
+    <line x1="30"  y1="275" x2="90"  y2="275" stroke="rgba(255,255,255,0.22)" stroke-width="2"   stroke-linecap="round"/>
+    <line x1="130" y1="285" x2="200" y2="285" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="240" y1="272" x2="310" y2="272" stroke="rgba(255,255,255,0.20)" stroke-width="2"   stroke-linecap="round"/>
+    <line x1="330" y1="282" x2="395" y2="282" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="60"  y1="296" x2="110" y2="296" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="180" y1="300" x2="260" y2="300" stroke="rgba(255,255,255,0.10)" stroke-width="1.5" stroke-linecap="round"/>
+
+    <!-- Beach strip -->
+    <path d="M-10 256 Q80 248 200 253 Q320 258 410 250 L410 280 Q320 276 200 272 Q80 268 -10 274 Z" fill="url(#sand)"/>
+
+    <!-- Palm tree trunk -->
+    <path d="M82 278 Q87 248 92 218 Q96 193 90 165 Q87 148 85 138" stroke="#6b3f10" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <!-- Palm leaves -->
+    <path d="M85 140 Q55 108 22 102"  stroke="#2d8a3e" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M85 140 Q72 102 76 74"   stroke="#34a04a" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M85 140 Q108 104 135 98" stroke="#2d8a3e" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M85 140 Q118 130 148 132" stroke="#3aaa4e" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M85 140 Q65 148 40 155"  stroke="#3aaa4e" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M85 140 Q62 122 45 118"  stroke="#2d8a3e" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+    <!-- Coconuts -->
+    <circle cx="87" cy="152" r="7" fill="#7b5e0a"/>
+    <circle cx="97" cy="159" r="6" fill="#8b6a10"/>
+    <circle cx="79" cy="158" r="5.5" fill="#6b500a"/>
+
+    <!-- Second palm (far right, partial) -->
+    <path d="M370 280 Q366 255 363 230 Q360 210 362 195" stroke="#6b3f10" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <path d="M362 197 Q340 172 325 168" stroke="#2d8a3e" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M362 197 Q350 174 353 152" stroke="#34a04a" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M362 197 Q380 172 398 168" stroke="#2d8a3e" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M362 197 Q382 184 400 185" stroke="#3aaa4e" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+
+    <!-- Car shadow on sand -->
+    <ellipse cx="215" cy="273" rx="92" ry="8" fill="rgba(0,0,0,0.28)"/>
+
+    <!-- Car body -->
+    <rect x="128" y="245" width="174" height="25" rx="6" fill="url(#car-body)" filter="url(#shadow-car)"/>
+    <!-- Car roof/cabin -->
+    <path d="M160 245 Q176 218 212 213 Q246 209 268 245 Z" fill="url(#car-roof)"/>
+    <!-- Window left -->
+    <path d="M167 243 Q176 224 200 221 Q215 220 220 243 Z" fill="#6cbfea" opacity="0.85"/>
+    <!-- Window right -->
+    <path d="M224 243 Q233 221 250 219 Q262 219 266 243 Z" fill="#6cbfea" opacity="0.85"/>
+    <!-- Window divider -->
+    <line x1="222" y1="220" x2="220" y2="244" stroke="#0d2347" stroke-width="2.5"/>
+    <!-- Reflection on windows -->
+    <path d="M172 240 Q178 226 188 222" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <!-- Front bumper/grill -->
+    <rect x="296" y="248" width="8"  height="15" rx="3" fill="#2563eb"/>
+    <rect x="295" y="252" width="10" height="6"  rx="2" fill="#1e40af"/>
+    <!-- Headlight -->
+    <ellipse cx="301" cy="248" rx="7" ry="5" fill="#fff9c4" opacity="0.9"/>
+    <ellipse cx="301" cy="248" rx="4" ry="3" fill="#fdd835"/>
+    <!-- Rear light -->
+    <ellipse cx="132" cy="250" rx="5" ry="4" fill="#ef4444" opacity="0.85"/>
+    <!-- Wheels -->
+    <circle cx="168" cy="270" r="15" fill="#111827"/>
+    <circle cx="168" cy="270" r="9"  fill="#1f2937"/>
+    <circle cx="168" cy="270" r="4"  fill="#374151"/>
+    <circle cx="272" cy="270" r="15" fill="#111827"/>
+    <circle cx="272" cy="270" r="9"  fill="#1f2937"/>
+    <circle cx="272" cy="270" r="4"  fill="#374151"/>
+    <!-- Wheel glint -->
+    <circle cx="163" cy="265" r="2.5" fill="rgba(255,255,255,0.4)"/>
+    <circle cx="267" cy="265" r="2.5" fill="rgba(255,255,255,0.4)"/>
+    <!-- Door line -->
+    <line x1="218" y1="245" x2="216" y2="268" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+
+    <!-- Dark footer band -->
+    <rect x="0" y="325" width="400" height="85" fill="rgba(4,14,32,0.80)"/>
+    <!-- Subtle gold line accent -->
+    <line x1="60" y1="330" x2="340" y2="330" stroke="url(#gold-ring)" stroke-width="1.5" opacity="0.6"/>
+
+    <!-- Evanoloca text -->
+    <text x="200" y="366" text-anchor="middle"
+          font-family="Georgia, 'Times New Roman', serif"
+          font-size="28" font-weight="900" letter-spacing="-0.5"
+          fill="white">Evan<tspan fill="#c9a84c">oloca</tspan></text>
+    <text x="200" y="390" text-anchor="middle"
+          font-family="Arial, Helvetica, sans-serif"
+          font-size="11.5" font-weight="600" letter-spacing="0.25em"
+          fill="rgba(201,168,76,0.80)">GUADELOUPE</text>
+
+  </g>
+
+  <!-- Gold border ring -->
+  <circle cx="200" cy="200" r="196" fill="none" stroke="url(#gold-ring)" stroke-width="3.5"/>
+  <circle cx="200" cy="200" r="199" fill="none" stroke="rgba(201,168,76,0.15)" stroke-width="1.5"/>
+</svg>

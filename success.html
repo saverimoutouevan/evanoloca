@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Réservation confirmée – Evanoloca</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#060e1e 0%,#0d1f40 50%,#060e1e 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.card{background:#fff;border-radius:24px;padding:52px 48px;max-width:520px;width:100%;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,.35)}
+.icon{font-size:72px;margin-bottom:20px;animation:popIn .6s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes popIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#0a1628;margin-bottom:6px}
+.logo em{color:#c9a84c;font-style:normal}
+.title{font-size:28px;font-weight:700;color:#0a1628;margin-bottom:10px;font-family:'Playfair Display',serif}
+.subtitle{font-size:15px;color:#525d70;line-height:1.7;margin-bottom:32px}
+.ref-box{background:#0a1628;border-radius:12px;padding:18px 24px;margin-bottom:32px;display:inline-block;width:100%}
+.ref-label{font-size:11px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.15em;margin-bottom:8px}
+.ref-num{font-family:'Courier New',monospace;font-size:22px;font-weight:700;color:#d4b96a;letter-spacing:.12em}
+.details{background:#f7f8fa;border-radius:14px;padding:22px 26px;margin-bottom:28px;text-align:left}
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eeeef2;font-size:14px;color:#525d70}
+.detail-row:last-child{border-bottom:none}
+.detail-row strong{color:#0a1628;font-weight:600}
+.amount-box{background:linear-gradient(135deg,#c9a84c,#e8c97e);border-radius:12px;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.amount-label{font-size:14px;font-weight:700;color:#fff}
+.amount-val{font-size:28px;font-weight:900;color:#fff}
+.remaining-note{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:12px 18px;font-size:13px;color:#b45309;margin-bottom:24px;line-height:1.55}
+.email-note{font-size:13px;color:#9098a8;line-height:1.65;margin-bottom:28px}
+.btn{display:inline-block;padding:14px 36px;border-radius:100px;background:linear-gradient(135deg,#1a3a6b,#0a1628);color:#fff;font-size:15px;font-weight:700;text-decoration:none;transition:transform .2s,box-shadow .2s;box-shadow:0 6px 24px rgba(10,22,40,.25)}
+.btn:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(10,22,40,.35)}
+.loading{font-size:15px;color:#9098a8;padding:40px 0}
+.spinner{display:inline-block;width:32px;height:32px;border:3px solid #eeeef2;border-top-color:#1a3a6b;border-radius:50%;animation:spin .7s linear infinite;margin-bottom:14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+#content{display:none}
+#loadingState{display:block}
+#errorState{display:none}
+.error-text{color:#e53e3e;font-size:14px;line-height:1.6;margin-bottom:20px}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">Evan<em>oloca</em></div>
+
+  <!-- Loading -->
+  <div id="loadingState" class="loading">
+    <div><div class="spinner"></div></div>
+    <div>Confirmation du paiement en cours…</div>
+  </div>
+
+  <!-- Success content -->
+  <div id="content">
+    <div class="icon">🎉</div>
+    <h1 class="title">Paiement confirmé !</h1>
+    <p class="subtitle">Votre réservation est enregistrée. Un email de confirmation avec tous les détails vous a été envoyé.</p>
+
+    <div class="ref-box">
+      <div class="ref-label">Référence de réservation</div>
+      <div class="ref-num" id="refNum">EVA-000000</div>
+    </div>
+
+    <div class="details" id="detailsBox"></div>
+
+    <div class="amount-box" id="amountBox"></div>
+
+    <div class="remaining-note" id="remainingNote" style="display:none"></div>
+
+    <p class="email-note">📧 Un email récapitulatif a été envoyé à <strong id="clientEmail"></strong>.<br>Présentez-le à votre arrivée à l'agence.</p>
+
+    <a href="/" class="btn">Retour à l'accueil</a>
+  </div>
+
+  <!-- Error -->
+  <div id="errorState">
+    <div class="icon">⚠️</div>
+    <p class="error-text" id="errorText">Une erreur est survenue lors de la confirmation.</p>
+    <a href="/" class="btn">Retour à l'accueil</a>
+  </div>
+</div>
+
+<script>
+(async () => {
+  const params    = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
+
+  if (!sessionId) {
+    showError('Aucune session de paiement trouvée.');
+    return;
+  }
+
+  try {
+    const res  = await fetch(`/order-complete?session_id=${sessionId}`);
+    const data = await res.json();
+
+    if (!data.ok) {
+      showError('Le paiement n\'a pas encore été confirmé. Veuillez patienter quelques instants et rafraîchir la page.');
+      return;
+    }
+
+    const m = data.metadata;
+    const isDeposit = m.paymentType === 'deposit';
+
+    // Reference (server generates it — we show the session last 6 chars as fallback)
+    document.getElementById('refNum').textContent = 'EVA-' + sessionId.slice(-6).toUpperCase();
+
+    // Details
+    const detailsBox = document.getElementById('detailsBox');
+    detailsBox.innerHTML = [
+      ['Véhicule',       m.carName],
+      ['Prise en charge', m.dateDebut],
+      ['Retour',          m.dateFin],
+      ['Durée',           m.days + ' jour' + (m.days > 1 ? 's' : '')],
+      ['Agence',          m.agence],
+      ['Mode de paiement', isDeposit ? 'Acompte 30%' : 'Paiement intégral'],
+    ].map(([k,v]) => `<div class="detail-row"><span>${k}</span><strong>${v}</strong></div>`).join('');
+
+    // Amount
+    document.getElementById('amountBox').innerHTML =
+      `<span class="amount-label">Montant encaissé</span><span class="amount-val">${m.amountPaid} €</span>`;
+
+    // Remaining
+    if (isDeposit && parseInt(m.remaining) > 0) {
+      const note = document.getElementById('remainingNote');
+      note.style.display = 'block';
+      note.textContent = `⚠️ Solde restant de ${m.remaining} € à régler sur place lors de la remise des clés.`;
+    }
+
+    // Email
+    document.getElementById('clientEmail').textContent = m.email;
+
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+
+  } catch (err) {
+    showError('Erreur de connexion : ' + err.message);
+  }
+})();
+
+function showError(msg) {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('errorText').textContent = msg;
+  document.getElementById('errorState').style.display = 'block';
+}
+</script>
+</body>
+</html>
