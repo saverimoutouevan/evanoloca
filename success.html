@@ -90,7 +90,10 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#060e1e 0%
   }
 
   try {
-    const res  = await fetch(`/order-complete?session_id=${sessionId}`);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000);
+    const res  = await fetch(`/order-complete?session_id=${sessionId}`, { signal: controller.signal });
+    clearTimeout(timeout);
     const data = await res.json();
 
     if (!data.ok) {
@@ -133,7 +136,11 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#060e1e 0%
     document.getElementById('content').style.display = 'block';
 
   } catch (err) {
-    showError('Erreur de connexion : ' + err.message);
+    if (err.name === 'AbortError') {
+      showError('Le serveur met du temps à répondre. Votre paiement a bien été effectué. Rafraîchissez la page dans quelques secondes.');
+    } else {
+      showError('Erreur de connexion : ' + err.message);
+    }
   }
 })();
 
