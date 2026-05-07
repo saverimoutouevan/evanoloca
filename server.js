@@ -218,10 +218,11 @@ async function handlePaidSession(session) {
 
 // ─── Envoi des emails ─────────────────────────────────────────────────────────
 async function sendEmails(m, ref) {
+  const smtpPort = parseInt(process.env.SMTP_PORT || '587');
   const transporter = nodemailer.createTransport({
     host:   process.env.SMTP_HOST,
-    port:   parseInt(process.env.SMTP_PORT || '465'),
-    secure: true,
+    port:   smtpPort,
+    secure: smtpPort === 465,
     auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
   });
 
