@@ -219,7 +219,7 @@ tr:hover td{background:#fafbfc}
 <div class="toast" id="toast"></div>
 
 <script>
-const API = 'http://localhost:3000';
+const API = window.location.origin;
 let adminToken  = localStorage.getItem('evaAdminToken') || null;
 let allData     = [];
 let activeFilter = 'all';
