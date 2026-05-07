@@ -8,6 +8,7 @@ const crypto   = require('crypto');
 const stripe   = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const app      = express();
 const PORT     = process.env.PORT || 3000;
+const APP_URL  = process.env.APP_URL || `http://localhost:${PORT}`;
 
 // ─── Stockage des réservations (fichier JSON) ─────────────────────────────────
 const DATA_DIR  = path.join(__dirname, 'data');
@@ -140,8 +141,8 @@ app.post('/create-checkout-session', async (req, res) => {
         amountPaid:  String(amountToPay),
         remaining:   String(remaining),
       },
-      success_url: `http://localhost:${PORT}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url:  `http://localhost:${PORT}/cancel.html`,
+      success_url: `${APP_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url:  `${APP_URL}/cancel.html`,
     });
 
     res.json({ url: session.url });
