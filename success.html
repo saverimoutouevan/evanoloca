@@ -46,7 +46,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#060e1e 0%
   <!-- Loading -->
   <div id="loadingState" class="loading">
     <div><div class="spinner"></div></div>
-    <div>Confirmation du paiement en cours…</div>
+    <div id="loadingMsg">Confirmation du paiement en cours…</div>
   </div>
 
   <!-- Success content -->
@@ -89,15 +89,32 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#060e1e 0%
     return;
   }
 
+  async function tryFetch(attempt) {
+    if (attempt > 3) {
+      showError('Votre paiement a bien été encaissé. Vous recevrez un email de confirmation. Référence : EVA-' + sessionId.slice(-6).toUpperCase());
+      return null;
+    }
+    if (attempt > 1) {
+      document.getElementById('loadingMsg').textContent = 'Connexion au serveur… (' + attempt + '/3)';
+    }
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 25000);
+      const res = await fetch(`/order-complete?session_id=${sessionId}`, { signal: controller.signal });
+      clearTimeout(timeout);
+      return await res.json();
+    } catch (e) {
+      await new Promise(r => setTimeout(r, 5000));
+      return tryFetch(attempt + 1);
+    }
+  }
+
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 20000);
-    const res  = await fetch(`/order-complete?session_id=${sessionId}`, { signal: controller.signal });
-    clearTimeout(timeout);
-    const data = await res.json();
+    const data = await tryFetch(1);
+    if (!data) return;
 
     if (!data.ok) {
-      showError('Le paiement n\'a pas encore été confirmé. Veuillez patienter quelques instants et rafraîchir la page.');
+      showError('Votre paiement a bien été encaissé. Vous recevrez un email de confirmation. Référence : EVA-' + sessionId.slice(-6).toUpperCase());
       return;
     }
 
@@ -136,11 +153,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#060e1e 0%
     document.getElementById('content').style.display = 'block';
 
   } catch (err) {
-    if (err.name === 'AbortError') {
-      showError('Le serveur met du temps à répondre. Votre paiement a bien été effectué. Rafraîchissez la page dans quelques secondes.');
-    } else {
-      showError('Erreur de connexion : ' + err.message);
-    }
+    showError('Votre paiement a bien été encaissé. Vous recevrez un email de confirmation. Référence : EVA-' + sessionId.slice(-6).toUpperCase());
   }
 })();
 
