@@ -217,14 +217,26 @@ async function handlePaidSession(session) {
 }
 
 // ─── Envoi des emails ─────────────────────────────────────────────────────────
-async function sendEmails(m, ref) {
-  const smtpPort = parseInt(process.env.SMTP_PORT || '587');
-  const transporter = nodemailer.createTransport({
-    host:   process.env.SMTP_HOST,
-    port:   smtpPort,
-    secure: smtpPort === 465,
-    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+async function sendResendEmail({ to, subject, html }) {
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: 'Evanoloca <onboarding@resend.dev>',
+      to,
+      subject,
+      html,
+    }),
   });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || JSON.stringify(data));
+  return data;
+}
+
+async function sendEmails(m, ref) {
 
   const isDeposit = m.paymentType === 'deposit';
 
@@ -336,15 +348,13 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f2f5;padding:32
   <div class="ftr"><p>Evanoloca – Système automatique · Sainte-Rose, 97115 Guadeloupe</p></div>
 </div></body></html>`;
 
-  await transporter.sendMail({
-    from:    `"Evanoloca" <${process.env.SENDER_EMAIL || process.env.OWNER_EMAIL}>`,
+  await sendResendEmail({
     to:      m.email,
     subject: `✅ Réservation ${ref} confirmée – ${m.carName}`,
     html:    clientHtml,
   });
 
-  await transporter.sendMail({
-    from:    `"Evanoloca Système" <${process.env.SENDER_EMAIL || process.env.OWNER_EMAIL}>`,
+  await sendResendEmail({
     to:      process.env.OWNER_EMAIL,
     subject: `🔔 Nouvelle réservation ${ref} – ${m.carName} – ${m.amountPaid} €`,
     html:    ownerHtml,
