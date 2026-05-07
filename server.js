@@ -352,7 +352,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f2f5;padding:32
     to:      m.email,
     subject: `✅ Réservation ${ref} confirmée – ${m.carName}`,
     html:    clientHtml,
-  });
+  }).catch(err => console.error(`Email client échoué [${m.email}]:`, err.message));
 
   await sendResendEmail({
     to:      process.env.OWNER_EMAIL,
