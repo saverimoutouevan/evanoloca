@@ -337,14 +337,14 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f2f5;padding:32
 </div></body></html>`;
 
   await transporter.sendMail({
-    from:    `"Evanoloca" <${process.env.SMTP_USER}>`,
+    from:    `"Evanoloca" <${process.env.SENDER_EMAIL || process.env.OWNER_EMAIL}>`,
     to:      m.email,
     subject: `✅ Réservation ${ref} confirmée – ${m.carName}`,
     html:    clientHtml,
   });
 
   await transporter.sendMail({
-    from:    `"Evanoloca Système" <${process.env.SMTP_USER}>`,
+    from:    `"Evanoloca Système" <${process.env.SENDER_EMAIL || process.env.OWNER_EMAIL}>`,
     to:      process.env.OWNER_EMAIL,
     subject: `🔔 Nouvelle réservation ${ref} – ${m.carName} – ${m.amountPaid} €`,
     html:    ownerHtml,
