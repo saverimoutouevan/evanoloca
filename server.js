@@ -223,6 +223,8 @@ async function handlePaidSession(session) {
 
 // ─── Envoi des emails ─────────────────────────────────────────────────────────
 async function sendResendEmail({ to, subject, html }) {
+  // Emails désactivés
+  return;
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
