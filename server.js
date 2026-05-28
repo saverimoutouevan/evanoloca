@@ -55,7 +55,12 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
   if (event.type === 'checkout.session.completed') {
-    await handlePaidSession(event.data.object).catch(console.error);
+    const session = event.data.object;
+    // Ignorer les paiements qui ne viennent pas d'evanoloca (ex: Villa Lorenza)
+    if (!session.metadata?.carId) {
+      return res.json({ received: true });
+    }
+    await handlePaidSession(session).catch(console.error);
   }
   res.json({ received: true });
 });
